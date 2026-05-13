@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PulseDesk Clinic SaaS
 
-## Getting Started
+Modern clinic operations software for Malaysia, built with Vite, React, and Supabase.
 
-First, run the development server:
+## Current Scope
+
+- Professional web UI shell with clinic and admin workspaces
+- Clinic dashboard with live-ready metrics and queue data
+- Admin billing review page for manual payment proof verification
+- Multi-tenant schema starter for clinics, subscriptions, invoices, appointments, and payment proofs
+- Supabase-backed browser data queries with fallback data when tables are not initialized yet
+
+## Tech Stack
+
+- Vite + React + TypeScript
+- Tailwind CSS
+- Supabase (Auth-ready, Postgres, Storage-ready)
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Ensure environment variables exist in `.env.local`:
+
+```bash
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_PUBLISHABLE_KEY=...
+VITE_DEFAULT_CLINIC_CODE=demo-clinic
+```
+
+3. In Supabase SQL Editor, run:
+
+- `supabase/schema.sql`
+
+4. Start the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Main Routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/` landing
+- `/clinic/dashboard` clinic dashboard
+- `/clinic/patients` patient list scaffold
+- `/clinic/billing` invoice scaffold
+- `/admin` subscription and payment proof review
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Manual Payment Proof Workflow (MVP)
 
-## Learn More
+1. Clinic receives invoice and bank transfer instructions.
+2. Clinic pays and uploads payment screenshot (upload endpoint to be added next).
+3. Record is saved in `payment_proofs` with `review_status = pending`.
+4. Super admin reviews pending proofs in `/admin` and verifies or rejects.
+5. Subscription status updates to `active`, `grace_period`, or `suspended`.
 
-To learn more about Next.js, take a look at the following resources:
+## Next Build Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Add Supabase Auth with tenant-aware roles
+- Add secure screenshot upload to Supabase Storage
+- Add admin actions to verify and reject payment proofs
+- Add RLS policies for clinic-level data isolation
+- Add doctor consultation, prescription, and inventory modules
